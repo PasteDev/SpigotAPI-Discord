@@ -19,12 +19,14 @@ async function sendResource() {
         page.ids.push(r.id);
         const url = `https://www.spigotmc.org/resources/${r.id}/`;
         const guild = await client.guilds.fetch("982366973746901012");
-        const channel = await guild.channels.fetch("982670953739878511");
+        const channel = await guild.channels.fetch("982707353222807643");
         const embed = new Discord.MessageEmbed()
             .setThumbnail(r.icon_link)
-            .setDescription(`**${r.title}**\n\n**Stats:**\nAutor: ${r.author.username}\nDescargas: ${r.stats.downloads}\nVersión: ${r.supported_minecraft_versions}\n\n> [Enlace del Plugin!](${url})`)
+            .setDescription(`**${r.title}**\n${r.tag}\n\n`)
+            .addField('Autor:', `${r.author.username || "?"}`, true)
+            .addField('Descargas:', `${r.stats.downloads || "?"}`, true)
             .setColor(0xb8d8ff)
-        await channel.send({ embeds: [embed] })
+        await channel.send({ embeds: [embed], content: `> **Link** ${url}`})
     }
     fs.writeFileSync("./newResources.json", JSON.stringify(page), { encoding: 'utf-8' });
     if (resource.length >= 10) {
@@ -48,9 +50,14 @@ async function sendResourceAuthor(_self, name) {
         const channel = await guild.channels.fetch(page.channelId);
         const embed = new Discord.MessageEmbed()
             .setThumbnail(r.icon_link)
-            .setDescription(`**${r.title}**\n\n**Stats:**\nAutor: ${r.author.username}\nDescargas: ${r.stats.downloads}\nVersión: ${r.supported_minecraft_versions}\n\n> [Enlace del Plugin!](${url})`)
+            .setDescription(`**${r.title}**\n${r.tag}\n\n`)
+            .addField('Autor:', `[${r.author.username || "?"}](https://www.spigotmc.org/resources/authors/${page.authorId})`, false)
+            .addField('Versión:', `${r.supported_minecraft_versions || "?"}`, false)
+            .addField('Descargas:', `${r.stats.downloads || "?"}`, false)
+            .addField('Updates:', `${r.stats.updates || "?"}`, false)
+            .addField('Clasificación:', `${r.stats.rating || "?"}✩`, false)
             .setColor(0xb8d8ff)
-        await channel.send({ embeds: [embed] })
+        await channel.send({ embeds: [embed], content: `> **Link** ${url}`})
     }
     fs.writeFileSync(`./Authors/${name}`, JSON.stringify(page), { encoding: 'utf-8' });
     if (resource.length >= 10) {
